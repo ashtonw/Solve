@@ -3,12 +3,16 @@ import sys
 
 __author__ = 'Ashton'
 
-class Puzzle(object):
 
+class Puzzle(object):
     def __init__(self):
-        self.board = defaultdict(char)
+        self.board = defaultdict(chr)
+
 
 def main(*args):
+    """
+
+    """
     try:
         print "done"
     except Exception:
