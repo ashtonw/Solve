@@ -11,7 +11,7 @@ class Puzzle(object):
 
 def main(*args):
     """
-    :)
+    :) test
     """
     try:
         print "done"
