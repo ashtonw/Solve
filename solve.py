@@ -7,11 +7,49 @@ class Cell(object):
     flip  = False
     match = False
 
+    def __init__(self, board=None, loc=None):
+        self.board = board
+        self.loc   = loc
+
+    def getAdjacent(self, d):
+        x,y = self.loc
+        if d   == 'N' or d == 0:
+            y += 1
+        elif d == 'E' or d == 1:
+            x += 1
+        elif d == 'S' or d == 2:
+            y -= 1
+        elif d == 'W' or d == 3:
+            x -= 1
+        elif d >= 4:
+            raise IndexError
+        return self.board[(x,y)]
+
+    def adjacent(self):
+        """generator for the adjacent cells"""
+        d = 0
+        while d < 4:
+            a = self.getAdjacent(d)
+            if a is not None:
+                yield a
+            d += 1
+
+
+    def getAbove(self):
+        return self.getAdjacent('N')
+    def getBelow(self):
+        return self.getAdjacent('S')
+    def getLeft(self):
+        return self.getAdjacent('W')
+    def getRight(self):
+        return self.getAdjacent('E')
+
 class Monster(Cell):
     flip  = True
     match = True
 
     def __init__(self, color):
+        Cell.__init__(self)
         self.color = color
 
     def matches(self, other):
@@ -19,13 +57,6 @@ class Monster(Cell):
 
 class Box(Cell):
     flip  = True
-
-class CellRef(object):
-    def __init__(self, board, loc):
-        self.board = board
-        self.cell  = board[loc]
-        self.flip  = self.cell.flip
-        self.match = self.cell.match
 
 
 class Board(dict):
@@ -37,7 +68,14 @@ class Board(dict):
 
     def __init__(self, list):
         k = zip(range(0, self.x_max), range(0, self.y_max))
-        dict.__init__(self, zip(k ,list))
+        dict.__init__(self)
+        for loc,cell in zip(k ,list):
+            self[loc] = cell
+
+    def __setitem__(self, loc, cell):
+        cell.loc = loc
+        cell.board = self
+        super(Board,self).__setitem__(loc,cell)
 
 
 class Game(object):
