@@ -67,15 +67,21 @@ class Board(dict):
         dict.__init__(self)
 
     def __init__(self, list):
-        k = zip(range(0, self.x_max), range(0, self.y_max))
+        k = [[0 for i in range(self.x_max)] for j in range(self.y_max)]
         dict.__init__(self)
         for loc,cell in zip(k ,list):
-            self[loc] = cell
+            self[tuple(loc)] = cell
 
     def __setitem__(self, loc, cell):
         cell.loc = loc
         cell.board = self
         super(Board,self).__setitem__(loc,cell)
+
+    def __repr__(self):
+        k = [[0 for i in range(self.x_max)] for j in range(self.y_max)]
+        repr = [i.__repr__() for i in k]
+        return '\n'.join(repr)
+
 
 
 class Game(object):
@@ -101,6 +107,7 @@ def main(*args):
         grid = [Monster('green'), Monster('red')]
         board = Board(grid)
 
+        print board
     except IOError: #Exception:
         print "Oops"
     else:
